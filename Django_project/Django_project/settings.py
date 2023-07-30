@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import datetime
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,8 +30,15 @@ DEBUG = True
 
 
 
-ALLOWED_HOSTS = []
 
+ALLOWED_HOSTS = ['b084-163-13-201-95.ngrok-free.app', '127.0.0.1']
+
+CORS_ORIGIN_WHITELIST = [
+    'https://mvr-frontend.vercel.app',
+]
+CORS_ALLOWED_ORIGINS = [
+    'https://mvr-frontend.vercel.app',
+]
 
 # Application definition
 
@@ -42,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',
     'rest_framework',
+    'rest_framework_simplejwt',
     
     
 ]
@@ -52,6 +62,17 @@ REST_FRAMEWORK = {
     'DEFAULT_PARSER_CLASSES': [
         'rest_framework.parsers.JSONParser',
     ],
+     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # ...
+    ],
+}
+
+# JWT設定
+JWT_AUTH = {
+    'JWT_SECRET_KEY': 'your-secret-key',
+    'JWT_ALGORITHM': 'HS256',
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),  # 設定憑證有效期限
 }
 
 MIDDLEWARE = [
@@ -84,10 +105,7 @@ TEMPLATES = [
         },
     },
 ]
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000',
-    
-]
+
 WSGI_APPLICATION = 'Django_project.wsgi.application'
 
 

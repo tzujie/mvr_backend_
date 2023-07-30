@@ -5,4 +5,8 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = '__all__'
- 
+        
+class CustomAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        exclude = ['password']

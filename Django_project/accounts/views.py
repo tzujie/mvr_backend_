@@ -1,6 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from accounts.serializers import AccountSerializer
+from accounts.serializers import AccountSerializer,CustomAccountSerializer
 from django.contrib.auth import authenticate, login
 
 @api_view(['POST'])
@@ -21,14 +21,14 @@ def login_account(request):
     try:
         user = Account.objects.get(email=email)
         if user.password == password:
-            # 登录成功
-            return Response({'message': '登录成功'}, status=200)
+        
+            return Response({'message': '登入成功'}, status=200)
         else:
-            # 密码不匹配
-            return Response({'message': '登录失败'}, status=401)
+     
+            return Response({'message': '登入失敗'}, status=401)
     except Account.DoesNotExist:
-        # 用户不存在
-        return Response({'message': '登录失败'}, status=401)
+   
+        return Response({'message': '登入失敗'}, status=401)
     
 
 from accounts.models import Account
@@ -36,7 +36,14 @@ from accounts.serializers import AccountSerializer
 
 @api_view(['GET'])
 def list_accounts(request):
-    accounts = Account.objects.all()
-    serializer = AccountSerializer(accounts, many=True, exclude_fields=['password'])
+    email = request.query_params.get('email')  
+    if email:
+        accounts = Account.objects.filter(email=email)
+    else:
+        accounts = Account.objects.all()
+    serializer = CustomAccountSerializer(accounts, many=True)
     return Response(serializer.data, status=200)
+
+from rest_framework_jwt.settings import api_settings
+
 
